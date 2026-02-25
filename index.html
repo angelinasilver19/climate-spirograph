@@ -75,7 +75,7 @@
   <script src="js/dataFetcher.js"></script>
   <script src="js/sketch.js"></script>
   <script>
-    // Live Anchorage clock — updates every second
+    // Clock: live Anchorage time when LIVE, or time from rewind slider when scrubbing
     function formatAnchorageTime() {
       const now = new Date();
       const anchorageTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Anchorage' }));
@@ -86,13 +86,37 @@
       return `${pad(hours)}:${pad(minutes)}:${pad(seconds)} AKST`;
     }
 
+    function formatTimeFromSlider(hoursDecimal) {
+      const pad = (n) => (n < 10 ? '0' + n : String(n));
+      const h = Math.floor(hoursDecimal);
+      const m = Math.floor((hoursDecimal % 1) * 60);
+      const s = Math.floor(((hoursDecimal % 1) * 60 % 1) * 60);
+      if (h >= 24) return '24:00:00 AKST';
+      return `${pad(h)}:${pad(m)}:${pad(s)} AKST`;
+    }
+
     function updateClock() {
       const el = document.getElementById('clock');
-      if (el) el.textContent = formatAnchorageTime();
+      const liveBtn = document.getElementById('live-btn');
+      const slider = document.getElementById('time-slider');
+      if (!el) return;
+      // When LIVE is active, show real Anchorage time; otherwise show time from rewind slider
+      if (liveBtn && liveBtn.classList.contains('active')) {
+        el.textContent = formatAnchorageTime();
+      } else if (slider) {
+        const val = parseFloat(slider.value) || 0;
+        el.textContent = formatTimeFromSlider(val);
+      } else {
+        el.textContent = formatAnchorageTime();
+      }
     }
 
     updateClock();
     setInterval(updateClock, 1000);
+
+    // Keep clock in sync while dragging the rewind slider
+    var timeSlider = document.getElementById('time-slider');
+    if (timeSlider) timeSlider.addEventListener('input', updateClock);
 
     // Archive button — navigate to archive page
     var archiveBtn = document.getElementById('archive-btn');
