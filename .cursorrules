@@ -1,0 +1,26 @@
+# Climate Spirograph Project Rules
+
+BEFORE STARTING ANY WORK:
+Read these files in order:
+1. docs/PRD.md - What we're building
+2. docs/ARCHITECTURE.md - How it's structured  
+3. docs/AI_RULES.md - Non-negotiable constraints
+4. docs/PLAN.md - Step-by-step build instructions
+
+## Core Rules:
+- Use ONLY p5.js + vanilla JavaScript (NO frameworks)
+- NO build tools (npm, webpack, etc.)
+- Three variables ONLY: r (daily), d (hourly), thickness (hourly)
+- Anchorage only, 1976 vs 2026 comparison
+- Real NOAA data only (no mock data in production)
+- Follow PLAN.md step-by-step (ONE step at a time)
+
+## Workflow:
+1. Read current step in PLAN.md
+2. Generate code
+3. Tell Angelina to test in browser
+4. Fix any issues
+5. Mark step as DONE
+6. Move to next step
+
+Angelina is learning to code. Be patient, explain clearly, test frequently.

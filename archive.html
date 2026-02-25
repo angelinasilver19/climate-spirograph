@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Climate Spirograph — Archive</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="archive-page">
+  <header class="archive-header">
+    <div class="archive-header-top">
+      <h1 class="archive-title">ANCHORAGE, ALASKA — Archive</h1>
+      <a href="index.html" class="archive-live-link">[LIVE VIEW]</a>
+    </div>
+  </header>
+
+  <main id="archive-main" class="archive-main">
+    <div class="calendar-wrap">
+      <div class="calendar-nav">
+        <button type="button" id="calendar-prev" class="calendar-nav-btn" aria-label="Previous month">←</button>
+        <h2 id="calendar-month-year" class="calendar-month-year">January 2026</h2>
+        <button type="button" id="calendar-next" class="calendar-nav-btn" aria-label="Next month">→</button>
+      </div>
+      <div class="calendar-weekdays">
+        <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+      </div>
+      <div id="calendar-grid" class="calendar-grid"></div>
+    </div>
+  </main>
+
+  <div id="archive-detail" class="archive-detail hidden">
+    <div class="archive-detail-inner">
+      <button type="button" id="archive-detail-close" class="archive-detail-close" aria-label="Close">×</button>
+      <p id="archive-detail-loading" class="archive-detail-loading hidden">Loading...</p>
+      <div id="spirograph-container" class="archive-detail-canvas-wrap"></div>
+      <div id="archive-detail-stats" class="archive-detail-stats hidden">
+        <div id="archive-detail-date" class="archive-stat"></div>
+        <div id="archive-detail-warming" class="archive-stat"></div>
+        <div id="archive-detail-delta" class="archive-stat"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/climateCalc.js"></script>
+  <script src="js/dataFetcher.js"></script>
+  <script src="js/archiveSketch.js"></script>
+  <script src="js/archive.js"></script>
+</body>
+</html>

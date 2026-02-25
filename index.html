@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Climate Spirograph — Anchorage, Alaska</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="header">
+    <h1>ANCHORAGE, ALASKA</h1>
+    <div id="clock">00:00:00 AKST</div>
+    <div class="header-buttons">
+      <button type="button" id="archive-btn" class="header-btn">[ARCHIVE]</button>
+      <button type="button" id="artist-note-btn" class="header-btn">[ARTIST NOTE]</button>
+    </div>
+  </header>
+
+  <!-- Artist Note modal -->
+  <div id="artist-note-modal" class="modal-overlay" aria-hidden="true">
+    <div class="modal-backdrop" id="modal-backdrop"></div>
+    <div class="modal-box" role="dialog" aria-labelledby="modal-title" aria-modal="true">
+      <button type="button" id="modal-close" class="modal-close" aria-label="Close">×</button>
+      <div id="modal-title" class="modal-content">
+        <p class="modal-title-line">Climate Spirograph — Anchorage, AK</p>
+        <p class="modal-byline">Angelina Silvestri, 2026</p>
+        <p class="modal-spacer"></p>
+        <p>The purpose of this piece is to visualize the accelerating warming of Anchorage's climate through the mathematical precision of a spirograph.</p>
+        <p>Everyday the model compares the same data from 1976 and 2026, over 24 hours, creating a unique spirograph. This portrait of atmospheric memory measures fifty years of change rendered as a single continuous line.</p>
+        <p>The form is shaped by 3 climatological variables:</p>
+        <p><strong>Amplitude</strong>, the distance each loop reaches from the center, measures <strong>Warming Acceleration</strong>. How much faster temperatures are rising now compared to the linear trend of the past decade. Longer loops mean the pace of warming is quickening, shorter loops indicate a general stability.</p>
+        <p><strong>Sharpness</strong>, the angle of each peak and valley, measures hourly <strong>Temperature Deviation</strong>. Each of the 24 loops represents one hour. Sharp, dramatic turns mark hours that have warmed significantly since 1976. Gentle curves indicate hours that remain relatively steady. The jaggedness of the pattern reveals which parts of the day have changed most.</p>
+        <p><strong>Line weight</strong>, the thickness of the drawn mark, measures <strong>Solar Radiation</strong>. Thin, fragile strokes during Arctic darkness and bold, insistent lines during daylight hours. The rhythm of the sun and passage of time made visible.</p>
+        <p class="modal-spacer"></p>
+        <div class="modal-footnote-section">
+          <p class="modal-footnote-heading">Data Footnote:</p>
+          <p class="modal-footnote-line">All temperature data pulled from NOAA's Climate Data Online archive, recorded at Anchorage Ted Stevens International Airport.</p>
+          <p class="modal-footnote-line">Hourly values interpolated from daily high/low temperatures.</p>
+          <p class="modal-footnote-line">Acceleration calculated via linear regression of 2016–2026 warming trends.</p>
+          <p class="modal-footnote-line">Solar radiation derived from latitude, date, and time of day.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main id="canvas-container">
+    <p id="loading-message" class="loading-message">Loading climate data...</p>
+    <!-- p5.js canvas is inserted here by sketch.js -->
+  </main>
+
+  <aside id="info-panel" class="info-panel" aria-label="Climate data summary">
+    <div id="info-date" class="info-line">—</div>
+    <div id="info-warming" class="info-line">—</div>
+    <div id="info-delta" class="info-line">—</div>
+  </aside>
+
+  <footer class="timeline-footer">
+    <div class="timeline-wrap">
+      <div class="timeline-slider-row">
+        <input type="range" id="time-slider" class="time-slider" min="0" max="24" step="0.1" value="0">
+      </div>
+      <div class="timeline-labels">
+        <span>0h</span>
+        <span>12h</span>
+        <span>24h</span>
+      </div>
+    </div>
+    <button type="button" id="live-btn" class="live-btn">LIVE</button>
+  </footer>
+
+  <!-- Scripts: order matters. Load p5 first, then our files, sketch last. -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/climateCalc.js"></script>
+  <script src="js/dataFetcher.js"></script>
+  <script src="js/sketch.js"></script>
+  <script>
+    // Live Anchorage clock — updates every second
+    function formatAnchorageTime() {
+      const now = new Date();
+      const anchorageTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Anchorage' }));
+      const hours = anchorageTime.getHours();
+      const minutes = anchorageTime.getMinutes();
+      const seconds = anchorageTime.getSeconds();
+      const pad = (n) => (n < 10 ? '0' + n : n);
+      return `${pad(hours)}:${pad(minutes)}:${pad(seconds)} AKST`;
+    }
+
+    function updateClock() {
+      const el = document.getElementById('clock');
+      if (el) el.textContent = formatAnchorageTime();
+    }
+
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    // Archive button — navigate to archive page
+    var archiveBtn = document.getElementById('archive-btn');
+    if (archiveBtn) archiveBtn.addEventListener('click', function() { window.location.href = 'archive.html'; });
+
+    // Artist Note modal
+    (function() {
+      var modal = document.getElementById('artist-note-modal');
+      var openBtn = document.getElementById('artist-note-btn');
+      var closeBtn = document.getElementById('modal-close');
+      var backdrop = document.getElementById('modal-backdrop');
+
+      function openModal() {
+        if (modal) {
+          modal.classList.add('modal-open');
+          modal.setAttribute('aria-hidden', 'false');
+          document.body.style.overflow = 'hidden';
+        }
+      }
+
+      function closeModal() {
+        if (modal) {
+          modal.classList.remove('modal-open');
+          modal.setAttribute('aria-hidden', 'true');
+          document.body.style.overflow = '';
+        }
+      }
+
+      if (openBtn) openBtn.addEventListener('click', openModal);
+      if (closeBtn) closeBtn.addEventListener('click', closeModal);
+      if (backdrop) backdrop.addEventListener('click', closeModal);
+
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modal && modal.classList.contains('modal-open')) {
+          closeModal();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
